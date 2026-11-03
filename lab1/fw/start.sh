@@ -34,11 +34,14 @@ iptables -t nat -A POSTROUTING -s 10.5.2.0/24 -d 10.5.0.0/24 -j SNAT --to-source
 
 #Trafico de dmz's por http
 iptables -A FORWARD  -d 10.5.1.0/24 -p tcp --dport 80 -m state --state NEW -j ACCEPT
+#Ahora por https
+iptables -A FORWARD -d 10.5.1.0/24 -p tcp --dport 443 -m state --state NEW -j ACCEPT
 
 #Trafico de dmz's para administracion
 iptables -A FORWARD -s 10.5.2.20 -d 10.5.1.20 -p tcp --dport 22 -m state --state NEW -j ACCEPT
 ##-- considera que la variacion es para que funcione con el cambio hacia 2222
 iptables -A FORWARD -s 10.5.2.20 -d 10.5.1.21 -p tcp --dport 2222 -m state --state NEW -j ACCEPT
+
 
 
 /usr/sbin/sshd -D
