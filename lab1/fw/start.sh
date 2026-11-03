@@ -28,4 +28,7 @@ iptables -A FORWARD -s 10.5.2.0/24 -p tcp  -j ACCEPT
 iptables -A FORWARD -s 10.5.2.0/24 -p udp -j ACCEPT
 iptables -A FORWARD -s 10.5.2.0/24 -p icmp -j ACCEPT
 
+# Con esto cambiamos la ip de source de modo que no se exponga la ip fija de cada servicio
+iptables -t nat -A POSTROUTING -s 10.5.2.0/24 -d 10.5.0.0/24 -j SNAT --to-source 10.5.0.1
+
 /usr/sbin/sshd -D
