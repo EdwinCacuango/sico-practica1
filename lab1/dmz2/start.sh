@@ -3,6 +3,15 @@ route add default gw 10.5.1.1
 route del default gw 10.5.1.254
 
 
+# File para almacenar servicios, cambio de permisos y lanzamiento de rsyslog con su demonio
+chown syslog:adm /var/log/auth.log
+chmod 640 /var/log/auth.log
+rsyslogd
+
+# Lanzar fail2ban
+fail2ban-server -xb start
+
+
 #lanzar apache
 service apache2 start
 
