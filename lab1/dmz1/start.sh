@@ -19,4 +19,9 @@ tee /var/www/html/index.html > /dev/null <<"EOF"
 EOF
 
 
+
+# lanzar cowrie como usuario sin privilegios (escucha en 2222)
+su - cowrie -c 'cd ~/cowrie && source cowrie-env/bin/activate && cowrie start'
+
+
 /usr/sbin/sshd -D
