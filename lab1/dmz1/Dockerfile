@@ -1,5 +1,5 @@
 FROM ubuntu:24.04
-RUN apt-get update && apt-get install -y openssh-server net-tools iputils-ping traceroute vim nano iproute2 iptables pkg-config tcpdump nmap
+RUN apt-get update && apt-get install -y openssh-server net-tools iputils-ping traceroute vim nano iproute2 iptables pkg-config tcpdump nmap curl ca-certificates
 # dependencias de cowrie (segun doc oficial)
 RUN apt-get install -y git python3-pip python3-venv python3-dev libssl-dev libffi-dev build-essential libpython3-dev authbind
 RUN apt-get install apache2 -y
@@ -7,6 +7,11 @@ RUN mkdir /var/run/sshd
 RUN echo 'root:root' |chpasswd
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# instalacion del agente de beszel (binario oficial, version fijada)
+ARG BESZEL_VERSION=0.21.1
+RUN curl -fsSL "https://github.com/henrygd/beszel/releases/download/v${BESZEL_VERSION}/beszel-agent_linux_amd64.tar.gz" | tar -xz -C /usr/local/bin beszel-agent 
+RUN chmod +x /usr/local/bin/beszel-agent
 
 # creacion de usuario sin privilegios para cowrie (sin password, sin sudo)
 RUN adduser --disabled-password --gecos "" cowrie

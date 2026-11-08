@@ -1,11 +1,16 @@
 FROM ubuntu:24.04
-RUN apt-get update && apt-get install -y openssh-server net-tools iputils-ping traceroute vim nano iproute2 iptables pkg-config tcpdump nmap
+RUN apt-get update && apt-get install -y openssh-server net-tools iputils-ping traceroute vim nano iproute2 iptables pkg-config tcpdump nmap curl ca-certificates
 RUN apt-get install apache2 -y
 RUN apt-get install rsyslog fail2ban -y
 RUN mkdir /var/run/sshd
 RUN echo 'root:root' |chpasswd
 RUN useradd -m -s /bin/bash user && echo 'user:user' | chpasswd
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# instalacion del agente de beszel (binario oficial, version fijada)
+ARG BESZEL_VERSION=0.21.1
+RUN curl -fsSL "https://github.com/henrygd/beszel/releases/download/v${BESZEL_VERSION}/beszel-agent_linux_amd64.tar.gz" | tar -xz -C /usr/local/bin beszel-agent \
+ && chmod +x /usr/local/bin/beszel-agent
 
 #lanzamiento de paquetes para ssl
 RUN a2enmod ssl

@@ -42,6 +42,10 @@ iptables -A FORWARD -s 10.5.2.20 -d 10.5.1.20 -p tcp --dport 22 -m state --state
 ##-- considera que la variacion es para que funcione con el cambio hacia 2222
 iptables -A FORWARD -s 10.5.2.20 -d 10.5.1.21 -p tcp --dport 2222 -m state --state NEW -j ACCEPT
 
+#Trafico de agentes beszel (dmz1 y dmz2) hacia el hub en int3 (websocket sobre http 8090)
+iptables -A FORWARD -s 10.5.1.20 -d 10.5.2.22 -p tcp --dport 8090 -m state --state NEW -j ACCEPT
+iptables -A FORWARD -s 10.5.1.21 -d 10.5.2.22 -p tcp --dport 8090 -m state --state NEW -j ACCEPT
+
 #Configuraciones honeypot-
 # Prerouting para redireccion del 22 al 2222
 iptables -t nat -A PREROUTING -s 10.5.0.0/24 -d 10.5.1.20 -p tcp --dport 22 -j DNAT --to-destination 10.5.1.20:2222

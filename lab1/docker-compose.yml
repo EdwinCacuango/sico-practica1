@@ -73,10 +73,17 @@ services:
     container_name: dmz1
     cap_add:
       - NET_ADMIN
-      - NET_RAW    
+      - NET_RAW
     networks:
       DMZ:
         ipv4_address: 10.5.1.20
+    environment:
+      # agente beszel en modo websocket (el agente inicia la conexion hacia int3)
+      - HUB_URL=http://10.5.2.22:8090
+      - KEY=${BESZEL_KEY:-}
+      - TOKEN=${BESZEL_TOKEN_DMZ1:-}
+      - SYSTEM_NAME=dmz1
+      - DISABLE_SSH=true
     depends_on:
     - fw
 
@@ -90,6 +97,12 @@ services:
     networks:
       DMZ:
         ipv4_address: 10.5.1.21
+    environment:
+      - HUB_URL=http://10.5.2.22:8090
+      - KEY=${BESZEL_KEY:-}
+      - TOKEN=${BESZEL_TOKEN_DMZ2:-}
+      - SYSTEM_NAME=dmz2
+      - DISABLE_SSH=true
     depends_on:
     - fw
 

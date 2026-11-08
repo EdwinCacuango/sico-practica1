@@ -1,1 +1,3 @@
 *.tar.gz
+.env
+lab1/int3/data-beszel/

@@ -29,4 +29,11 @@ tee /var/www/html/index.html > /dev/null <<"EOF"
 EOF
 
 
+# lanzar agente de beszel: conecta por websocket al hub (HUB_URL), sin servidor ssh propio
+if [ -n "$KEY" ] && [ -n "$TOKEN" ]; then
+  beszel-agent > /var/log/beszel-agent.log 2>&1 &
+else
+  echo "beszel-agent no lanzado: faltan KEY y/o TOKEN (ver lab1/.env)"
+fi
+
 /usr/sbin/sshd -D
