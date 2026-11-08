@@ -7,6 +7,16 @@ RUN echo 'root:root' |chpasswd
 RUN useradd -m -s /bin/bash user && echo 'user:user' | chpasswd
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+#lanzamiento de paquetes para ssl
+RUN a2enmod ssl
+RUN a2ensite default-ssl
+
+#creacion de certificado propio y configuracion de https
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/dmz2.key -out /etc/ssl/certs/dmz2.crt -subj "/C=ES/O=Practica1 Sistemas Confiables/CN=10.5.1.21" -addext "subjectAltName=IP:10.5.1.21"
+RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/ssl/certs/dmz2.crt|' /etc/apache2/sites-available/default-ssl.conf
+RUN sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/ssl/private/dmz2.key|' /etc/apache2/sites-available/default-ssl.conf
+RUN apache2ctl configtest
+
 # Hago copia de openssh default
 RUN cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak-init
 
@@ -23,8 +33,8 @@ RUN chmod 600 /home/user/.ssh/authorized_keys
 
 RUN mkdir -p /run/sshd && sshd -t
 
-# Cambio a puerto 2222 para ssh
-EXPOSE 2222
+# puertos expuestos
+EXPOSE 2222 443 80
 
 # Configuraciones para fail2ban y validaciones
 COPY ./config/jail.local /etc/fail2ban/jail.local
