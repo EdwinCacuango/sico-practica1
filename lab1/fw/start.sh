@@ -44,7 +44,7 @@ iptables -A FORWARD -s 10.5.2.20 -d 10.5.1.21 -p tcp --dport 2222 -m state --sta
 
 #Configuraciones honeypot-
 # Prerouting para redireccion del 22 al 2222
-iptables -t NAT -A PREROUTING -s 10.5.0.0/24 -d 10.5.1.20 -p tcp --dport 22 -j DNAT --to-destination 10.5.1.20:2222
+iptables -t nat -A PREROUTING -s 10.5.0.0/24 -d 10.5.1.20 -p tcp --dport 22 -j DNAT --to-destination 10.5.1.20:2222
 # forward p
 iptables -A FORWARD -s 10.5.0.0/24 -d 10.5.1.20 -p tcp --dport 2222 -m conntrack --ctstate NEW,DNAT --ctorigdstport 22 -j ACCEPT
 
